@@ -1,0 +1,39 @@
+import os
+import subprocess
+
+def run_adb_command(command):
+    """دالة لتنفيذ أوامر ADB على الجهاز الوهمي"""
+    try:
+        result = subprocess.run(command, shell=True, capture_output=True, text=True)
+        return result.stdout
+    except Exception as e:
+        return str(e)
+
+def show_menu():
+    print("--- لوحة تحكم المحاكاة التعليمية ---")
+    print("1. التحقق من اتصال الجهاز الوهمي")
+    print("2. إعادة تشغيل الجهاز (Reboot)")
+    print("3. محاكاة قفل الشاشة")
+    print("4. عرض قائمة التطبيقات المثبتة")
+    print("5. خروج")
+    print("-----------------------------------")
+
+while True:
+    show_menu()
+    choice = input("اختر أمراً: ")
+
+    if choice == '1':
+        print(run_adb_command("adb devices"))
+    elif choice == '2':
+        print("جاري إعادة التشغيل...")
+        run_adb_command("adb reboot")
+    elif choice == '3':
+        # محاكاة الضغط على زر الطاقة لقفل الشاشة
+        run_adb_command("adb shell input keyevent 26")
+        print("تم إرسال أمر قفل الشاشة.")
+    elif choice == '4':
+        print(run_adb_command("adb shell pm list packages"))
+    elif choice == '5':
+        break
+    else:
+        print("اختيار غير صحيح!")
